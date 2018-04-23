@@ -1,0 +1,24 @@
+{
+  "name": "homebridge-zigbee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsmepetrov/homebridge-zigbee.git#77eee08"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsmepetrov/homebridge-zigbee/issues"
+  },
+  "homepage": "https://github.com/itsmepetrov/homebridge-zigbee#readme",
+  "dependencies": {
+    "require-dir": "^1.0.0",
+    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#3678ded88b7ac0dcb7241c745cdfe4423822b9ca"
+  }
+}
