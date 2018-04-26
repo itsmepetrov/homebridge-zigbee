@@ -1,16 +1,16 @@
+const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
+const devices = requireDir('./lib/devices')
 
-const PORT = '/dev/tty.usbmodem1461'
+const PORT = '/dev/tty.usbmodem14414221'
 
-let PlatformAccessory, Accessory, Service, Characteristic, UUIDGen
+let Accessory, Service, Characteristic, UUIDGen
 
 module.exports = function(homebridge) {
-  PlatformAccessory = homebridge.platformAccessory
-  Accessory = homebridge.hap.Accessory
+  Accessory = homebridge.platformAccessory
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
   UUIDGen = homebridge.hap.uuid
-  
   homebridge.registerPlatform('homebridge-zigbee', 'ZigBeePlatform', ZigBeePlatform, true)
 }
 
@@ -19,6 +19,8 @@ class ZigBeePlatform {
     this.log = log
     this.api = api
     this.config = config
+    this.devices = {}
+    this.accessories = {}
 
     // Bind handlers
     this.handleZigBeeStart = this.handleZigBeeStart.bind(this)
@@ -38,8 +40,8 @@ class ZigBeePlatform {
 
   startZigBee() {
     zigbee.init({
-      port: PORT,
-      db: './shepherd.db',
+      port: this.config.port,
+      db: this.config.database || './shepherd.db',
     })
     zigbee.on('ready', this.handleZigBeeReady)
     zigbee.start(this.handleZigBeeStart)
@@ -47,16 +49,72 @@ class ZigBeePlatform {
 
   handleZigBeeStart(error) {
     if (error) {
-      console.error('ZigBee error:', error)
+      this.log('ZigBee error:', error)
     }
   }
 
   handleZigBeeReady() {
-    const list = zigbee.list()
-    console.log('devices:', list)
+    zigbee.list().forEach(
+      data => this.initDevice(data)
+    )
   }
 
-  configureAccessory() {}
+  setDevice(device) {
+    this.devices[device.accessory.UUID] = device
+  }
 
-  removeAccessory() {}
+  getDevice(uuid) {
+    return this.devices[uuid]
+  }
+
+  setAccessory(accessory) {
+    this.accessories[accessory.UUID] = accessory
+  }
+
+  getAccessory(uuid) {
+    return this.accessories[uuid]
+  }
+
+  registerAccessory(accessory) {
+    this.setAccessory(accessory)
+    this.api.registerPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
+  }
+
+  initDevice(data) {
+    const log = this.log
+    const platform = this
+    const model = data.modelId
+    const ieeeAddr = data.ieeeAddr
+    const epList = data.epList
+    const uuid = UUIDGen.generate(ieeeAddr)
+    const accessory = this.getAccessory(uuid)
+    const Device = devices[model]
+
+    if (!Device) {
+      return this.log('Unrecognized device:', model);
+    }
+
+    const device = new Device({
+      model,
+      ieeeAddr,
+      epList,
+      accessory,
+      platform,
+      log,
+      Accessory,
+      Service,
+      Characteristic,
+      UUIDGen,
+    })
+  
+    this.setDevice(device)
+  }
+
+  configureAccessory(accessory) {
+    this.setAccessory(accessory)
+  }
+
+  removeAccessory() {
+    this.log('removeAccessory is not implemented yet')
+  }
 }

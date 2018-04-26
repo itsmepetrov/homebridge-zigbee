@@ -7,10 +7,17 @@
     "start": "node index.js",
     "permit-join": "node scripts/permit-join.js"
   },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/itsmepetrov/homebridge-zigbee.git#77eee08"
   },
+  "keywords": [
+    "homebridge-plugin"
+  ],
   "author": "",
   "license": "MIT",
   "bugs": {

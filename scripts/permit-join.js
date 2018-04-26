@@ -17,11 +17,18 @@ zigbee.on('error', (error) => {
 
 zigbee.on('ready', () => {
   console.log('Ready')
-  zigbee.permitJoin(120, (error) => {
-    if (error) {
-      console.error('Error:', error)
-    }
-  })
+  setTimeout(() => {
+    zigbee.permitJoin(120, (error) => {
+      if (error) {
+        console.error('Error:', error)
+      }
+    })
+  }, 3000)
+  // zigbee.permitJoin(120, (error) => {
+  //   if (error) {
+  //     console.error('Error:', error)
+  //   }
+  // })
 })
 
 zigbee.on('permitJoining', (joinTimeLeft) => {
@@ -38,6 +45,12 @@ zigbee.on('ind', (msg) => {
       break
     case 'devLeaving':
       console.log(`Device announced leaving and is removed, id: ${msg.data}`)
+      break
+    case 'attReport':
+      console.log('Report:', msg)
+      break
+    case 'statusChange':
+      console.log('Status:', msg)
       break
   }
 })
