@@ -85,7 +85,6 @@ class ZigBeePlatform {
     const platform = this
     const model = data.modelId
     const ieeeAddr = data.ieeeAddr
-    const epList = data.epList
     const uuid = UUIDGen.generate(ieeeAddr)
     const accessory = this.getAccessory(uuid)
     const Device = devices[model]
@@ -97,7 +96,6 @@ class ZigBeePlatform {
     const device = new Device({
       model,
       ieeeAddr,
-      epList,
       accessory,
       platform,
       log,
