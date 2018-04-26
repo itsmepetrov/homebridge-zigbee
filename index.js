@@ -1,44 +1,62 @@
 const zigbee = require('./lib/zigbee')
-const manager = require('./lib/manager')
 
-const PORT = '/dev/tty.usbmodem14621'
+const PORT = '/dev/tty.usbmodem1461'
 
-zigbee.init({
-  port: PORT,
-  db: './shepherd.db',
-})
+let PlatformAccessory, Accessory, Service, Characteristic, UUIDGen
 
-zigbee.on('error', (error) => {
-  console.error('Error:', error)
-})
+module.exports = function(homebridge) {
+  PlatformAccessory = homebridge.platformAccessory
+  Accessory = homebridge.hap.Accessory
+  Service = homebridge.hap.Service
+  Characteristic = homebridge.hap.Characteristic
+  UUIDGen = homebridge.hap.uuid
+  
+  homebridge.registerPlatform('homebridge-zigbee', 'ZigBeePlatform', ZigBeePlatform, true)
+}
 
-zigbee.on('ready', () => {
-  console.log('Ready')
+class ZigBeePlatform {
+  constructor(log, config, api) {
+    this.log = log
+    this.api = api
+    this.config = config
 
-  // setTimeout(() => {
-  //   zigbee.permitJoin(60, (error) => {
-  //     if (error) {
-  //       console.error('Error:', error);
-  //     }
-  //   });
-  // }, 1000)
+    // Bind handlers
+    this.handleZigBeeStart = this.handleZigBeeStart.bind(this)
+    this.handleZigBeeReady = this.handleZigBeeReady.bind(this)
+    this.configureAccessory = this.configureAccessory.bind(this)
+    this.handleInitialization = this.handleInitialization.bind(this)
 
-  const list = zigbee.list()
+    // Listen events
+    this.api.on('didFinishLaunching', this.handleInitialization)
 
-  manager.init(list)
-})
-
-zigbee.on('permitJoining', (joinTimeLeft) => {
-  console.log('Permit joining:', joinTimeLeft)
-})
-
-// zigbee.on('ind', (msg) => {
-//   // console.log('Ind:', msg);
-//   console.dir(msg)
-// });
-
-zigbee.start((error) => {
-  if (error) {
-    console.error('Error:', error)
+    this.log('ZigBee platform initialization')
   }
-})
+
+  handleInitialization() {
+    this.startZigBee()
+  }
+
+  startZigBee() {
+    zigbee.init({
+      port: PORT,
+      db: './shepherd.db',
+    })
+    zigbee.on('ready', this.handleZigBeeReady)
+    zigbee.start(this.handleZigBeeStart)
+  }
+
+  handleZigBeeStart(error) {
+    if (error) {
+      console.error('ZigBee error:', error)
+    }
+  }
+
+  handleZigBeeReady() {
+    const list = zigbee.list()
+    console.log('devices:', list)
+  }
+
+  configureAccessory() {}
+
+  removeAccessory() {}
+}
