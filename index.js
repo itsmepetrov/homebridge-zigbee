@@ -1,6 +1,7 @@
 const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
-const devices = requireDir('./lib/devices')
+const castArray = require('./lib/utils/castArray')
+const devices = Object.values(requireDir('./lib/devices'))
 
 const PORT = '/dev/tty.usbmodem14414221'
 
@@ -44,13 +45,18 @@ class ZigBeePlatform {
       db: this.config.database || './shepherd.db',
     })
     zigbee.on('ready', this.handleZigBeeReady)
+    zigbee.on('error', this.handleZigBeeError)
     zigbee.start(this.handleZigBeeStart)
   }
 
   handleZigBeeStart(error) {
     if (error) {
-      this.log('ZigBee error:', error)
+      this.log('[ZigBee:ready] error:', error)
     }
+  }
+
+  handleZigBeeError(error) {
+    this.log('[ZigBee:error] error:', error)
   }
 
   handleZigBeeReady() {
@@ -80,21 +86,38 @@ class ZigBeePlatform {
     this.api.registerPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
   }
 
+  recognizeDevice({ model, manufacturer }) {
+    for (let Device of devices) {
+      if (!Device.description) {
+        continue
+      }
+      const description = Device.description()
+      if (
+        castArray(description.model).includes(model) &&
+        castArray(description.manufacturer).includes(manufacturer)
+      ) {
+        return Device
+      }
+    }
+  }
+
   initDevice(data) {
-    const log = this.log
     const platform = this
     const model = data.modelId
+    const manufacturer = data.manufName
     const ieeeAddr = data.ieeeAddr
     const uuid = UUIDGen.generate(ieeeAddr)
     const accessory = this.getAccessory(uuid)
-    const Device = devices[model]
+    const log = (...args) => this.log(manufacturer, model, ieeeAddr, ...args)
+    const Device = this.recognizeDevice({ model, manufacturer })
 
     if (!Device) {
-      return this.log('Unrecognized device:', model);
+      return this.log('Unrecognized device:', manufacturer, model, ieeeAddr);
     }
 
     const device = new Device({
       model,
+      manufacturer,
       ieeeAddr,
       accessory,
       platform,
@@ -106,6 +129,7 @@ class ZigBeePlatform {
     })
   
     this.setDevice(device)
+    this.log('Registered device:', manufacturer, model, ieeeAddr)
   }
 
   configureAccessory(accessory) {

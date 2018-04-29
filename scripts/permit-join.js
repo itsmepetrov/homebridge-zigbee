@@ -17,18 +17,11 @@ zigbee.on('error', (error) => {
 
 zigbee.on('ready', () => {
   console.log('Ready')
-  setTimeout(() => {
-    zigbee.permitJoin(120, (error) => {
-      if (error) {
-        console.error('Error:', error)
-      }
-    })
-  }, 3000)
-  // zigbee.permitJoin(120, (error) => {
-  //   if (error) {
-  //     console.error('Error:', error)
-  //   }
-  // })
+  zigbee.permitJoin(120, (error) => {
+    if (error) {
+      console.error('Error:', error)
+    }
+  })
 })
 
 zigbee.on('permitJoining', (joinTimeLeft) => {
