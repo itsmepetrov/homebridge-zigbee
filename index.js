@@ -3,8 +3,6 @@ const zigbee = require('./lib/zigbee')
 const castArray = require('./lib/utils/castArray')
 const devices = Object.values(requireDir('./lib/devices'))
 
-const PORT = '/dev/tty.usbmodem14414221'
-
 let Accessory, Service, Characteristic, UUIDGen
 
 module.exports = function(homebridge) {
@@ -25,6 +23,7 @@ class ZigBeePlatform {
 
     // Bind handlers
     this.handleZigBeeStart = this.handleZigBeeStart.bind(this)
+    this.handleZigBeeError = this.handleZigBeeError.bind(this)
     this.handleZigBeeReady = this.handleZigBeeReady.bind(this)
     this.configureAccessory = this.configureAccessory.bind(this)
     this.handleInitialization = this.handleInitialization.bind(this)
