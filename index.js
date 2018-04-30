@@ -112,7 +112,7 @@ class ZigBeePlatform {
     const Device = this.recognizeDevice({ model, manufacturer })
 
     if (!Device) {
-      return this.log('Unrecognized device:', manufacturer, model, ieeeAddr);
+      return this.log('Unrecognized device:', manufacturer, model, ieeeAddr)
     }
 
     const device = new Device({

@@ -16,7 +16,17 @@
     "url": "git+https://github.com/itsmepetrov/homebridge-zigbee.git#77eee08"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "homebridge-zigbee",
+    "homebridge",
+    "homekit",
+    "zigbee",
+    "ikea",
+    "tradfri",
+    "xiaomi",
+    "aqara",
+    "philips",
+    "hue"
   ],
   "author": "",
   "license": "MIT",
@@ -26,7 +36,6 @@
   "homepage": "https://github.com/itsmepetrov/homebridge-zigbee#readme",
   "dependencies": {
     "require-dir": "^1.0.0",
-    "strftime": "^0.10.0",
-    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#3678ded88b7ac0dcb7241c745cdfe4423822b9ca"
+    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#1ef50d502d2f85eb65cdf5d592488b54f61ef7d9"
   }
 }
