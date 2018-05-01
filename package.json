@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/itsmepetrov/homebridge-zigbee#readme",
   "dependencies": {
+    "lodash.get": "^4.4.2",
     "require-dir": "^1.0.0",
     "serialport": "^4.0.7",
     "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#13e539aac5b20d2cdd2ba9ec7d1000f27ffde012"

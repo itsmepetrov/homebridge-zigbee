@@ -1,3 +1,4 @@
+const get = require('lodash.get');
 const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
 const castArray = require('./lib/utils/castArray')
@@ -62,20 +63,27 @@ class ZigBeePlatform {
   }
 
   handleZigBeeIndication(message) {
-    const endpoint = message.endpoints[0]
+    switch (message.type) {
+      // Supported indication messages
+      case 'attReport':
+      case 'statusChange': {
+        const ieeeAddr = get(message, 'endpoints[0].device.ieeeAddr')
 
-    if (!endpoint || !endpoint.device) {
-      return this.log('Unable to parse message:', message)
+        if (!ieeeAddr) {
+          return this.log('Unable to parse device ieeeAddr from message:', message)
+        }
+
+        const device = this.getDevice(ieeeAddr)
+
+        if (!device) {
+          return this.log('Received message from unknown device:', ieeeAddr)
+        }
+
+        device.zigbee.handleIndicationMessage(message)
+      }
+      default:
+        return
     }
-
-    const ieeeAddr = endpoint.device.ieeeAddr
-    const device = this.getDevice(ieeeAddr)
-
-    if (!device) {
-      return this.log('Received message from unknown device:', ieeeAddr)
-    }
-
-    device.zigbee.handleIndicationMessage(message)
   }
 
   handleZigBeeReady() {
