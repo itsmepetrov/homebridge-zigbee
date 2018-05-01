@@ -37,6 +37,6 @@
   "dependencies": {
     "require-dir": "^1.0.0",
     "serialport": "^4.0.7",
-    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#1ef50d502d2f85eb65cdf5d592488b54f61ef7d9"
+    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#13e539aac5b20d2cdd2ba9ec7d1000f27ffde012"
   }
 }
