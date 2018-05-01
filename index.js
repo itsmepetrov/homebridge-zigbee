@@ -79,9 +79,10 @@ class ZigBeePlatform {
   }
 
   handleZigBeeReady() {
-    zigbee.list().forEach(
-      data => this.initDevice(data)
-    )
+    // Wait a little bit before device initialization to avoid timeout error
+    setTimeout(() => {
+      zigbee.list().forEach(data => this.initDevice(data))
+    }, 2000)
   }
 
   setDevice(device) {
