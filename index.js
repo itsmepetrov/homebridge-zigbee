@@ -26,6 +26,7 @@ class ZigBeePlatform {
     this.handleZigBeeStart = this.handleZigBeeStart.bind(this)
     this.handleZigBeeError = this.handleZigBeeError.bind(this)
     this.handleZigBeeReady = this.handleZigBeeReady.bind(this)
+    this.handleZigBeeIndication = this.handleZigBeeIndication.bind(this)
     this.configureAccessory = this.configureAccessory.bind(this)
     this.handleInitialization = this.handleInitialization.bind(this)
 
@@ -46,6 +47,7 @@ class ZigBeePlatform {
     })
     zigbee.on('ready', this.handleZigBeeReady)
     zigbee.on('error', this.handleZigBeeError)
+    zigbee.on('ind', this.handleZigBeeIndication)
     zigbee.start(this.handleZigBeeStart)
   }
 
@@ -59,6 +61,17 @@ class ZigBeePlatform {
     this.log('[ZigBee:error] error:', error)
   }
 
+  handleZigBeeIndication(message) {
+    const ieeeAddr = message.endpoints[0].device.ieeeAddr
+    const device = this.getDevice(ieeeAddr)
+
+    if (!device) {
+      return this.log('Received message from unknown device:', ieeeAddr)
+    }
+
+    device.zigbee.handleIndicationMessage(message)
+  }
+
   handleZigBeeReady() {
     zigbee.list().forEach(
       data => this.initDevice(data)
@@ -66,11 +79,11 @@ class ZigBeePlatform {
   }
 
   setDevice(device) {
-    this.devices[device.accessory.UUID] = device
+    this.devices[device.ieeeAddr] = device
   }
 
-  getDevice(uuid) {
-    return this.devices[uuid]
+  getDevice(ieeeAddr) {
+    return this.devices[ieeeAddr]
   }
 
   setAccessory(accessory) {
