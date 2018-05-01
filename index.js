@@ -1,6 +1,7 @@
 const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
 const castArray = require('./lib/utils/castArray')
+const findSerialPort = require('./lib/utils/findSerialPort')
 const devices = Object.values(requireDir('./lib/devices'))
 
 let Accessory, Service, Characteristic, UUIDGen
@@ -38,9 +39,9 @@ class ZigBeePlatform {
     this.startZigBee()
   }
 
-  startZigBee() {
+  async startZigBee() {
     zigbee.init({
-      port: this.config.port,
+      port: this.config.port || await findSerialPort(),
       db: this.config.database || './shepherd.db',
     })
     zigbee.on('ready', this.handleZigBeeReady)
