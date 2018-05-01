@@ -62,7 +62,13 @@ class ZigBeePlatform {
   }
 
   handleZigBeeIndication(message) {
-    const ieeeAddr = message.endpoints[0].device.ieeeAddr
+    const endpoint = message.endpoints[0]
+
+    if (!endpoint || !endpoint.device) {
+      return this.log('Unable to parse message:', message)
+    }
+
+    const ieeeAddr = endpoint.device.ieeeAddr
     const device = this.getDevice(ieeeAddr)
 
     if (!device) {
