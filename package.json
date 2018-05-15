@@ -28,7 +28,7 @@
     "philips",
     "hue"
   ],
-  "author": "",
+  "author": "Anton Petrov <petrov.aap@gmail.com> (http://github.com/itsmepetrov)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/itsmepetrov/homebridge-zigbee/issues"
@@ -38,6 +38,7 @@
     "lodash.get": "^4.4.2",
     "require-dir": "^1.0.0",
     "serialport": "^4.0.7",
+    "zcl-id": "^0.3.2",
     "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#13e539aac5b20d2cdd2ba9ec7d1000f27ffde012"
   }
 }
