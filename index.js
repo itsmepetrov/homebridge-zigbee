@@ -1,8 +1,10 @@
 const get = require('lodash.get');
 const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
+const sleep = require('./lib/utils/sleep')
 const castArray = require('./lib/utils/castArray')
 const findSerialPort = require('./lib/utils/findSerialPort')
+const PermitJoinAccessory = require('./lib/PermitJoinAccessory');
 const devices = Object.values(requireDir('./lib/devices'))
 
 let Accessory, Service, Characteristic, UUIDGen
@@ -22,14 +24,15 @@ class ZigBeePlatform {
     this.config = config
     this.devices = {}
     this.accessories = {}
+    this.permitJoinAccessory = null
 
     // Bind handlers
     this.handleZigBeeStart = this.handleZigBeeStart.bind(this)
     this.handleZigBeeError = this.handleZigBeeError.bind(this)
     this.handleZigBeeReady = this.handleZigBeeReady.bind(this)
     this.handleZigBeeIndication = this.handleZigBeeIndication.bind(this)
-    this.configureAccessory = this.configureAccessory.bind(this)
     this.handleInitialization = this.handleInitialization.bind(this)
+    this.configureAccessory = this.configureAccessory.bind(this)
 
     // Listen events
     this.api.on('didFinishLaunching', this.handleInitialization)
@@ -38,7 +41,7 @@ class ZigBeePlatform {
   }
 
   handleInitialization() {
-    this.startZigBee()
+    this.startZigBee().catch(this.log)
   }
 
   async startZigBee() {
@@ -66,31 +69,65 @@ class ZigBeePlatform {
     switch (message.type) {
       // Supported indication messages
       case 'attReport':
-      case 'statusChange': {
-        const ieeeAddr = get(message, 'endpoints[0].device.ieeeAddr')
-
-        if (!ieeeAddr) {
-          return this.log('Unable to parse device ieeeAddr from message:', message)
-        }
-
-        const device = this.getDevice(ieeeAddr)
-
-        if (!device) {
-          return this.log('Received message from unknown device:', ieeeAddr)
-        }
-
-        device.zigbee.handleIndicationMessage(message)
-      }
+      case 'statusChange':
+        return this.handleZigBeeAttrChange(message)
+      case 'devInterview':
+        return this.handleZigBeeDevInterview(message)
+      case 'devIncoming':
+        return this.handleZigBeeDevIncoming(message)
+      case 'devLeaving':
+        return this.handleZigBeeDevLeaving(message)
       default:
         return
     }
   }
 
-  handleZigBeeReady() {
+  handleZigBeeAttrChange(message) {
+    const ieeeAddr = get(message, 'endpoints[0].device.ieeeAddr')
+
+    if (!ieeeAddr) {
+      return this.log('Unable to parse device ieeeAddr from message:', message)
+    }
+
+    const device = this.getDevice(ieeeAddr)
+
+    if (!device) {
+      return this.log('Received message from unknown device:', ieeeAddr)
+    }
+
+    device.zigbee.handleIndicationMessage(message)
+  }
+
+  handleZigBeeDevInterview(message) {
+    const endpoint = get(message, 'status.endpoint.current')
+    const endpointTotal = get(message, 'status.endpoint.total')
+    const cluster = get(message, 'status.endpoint.cluster.current')
+    const clusterTotal = get(message, 'status.endpoint.cluster.total')
+    this.log(`Join progress: interview endpoint ${endpoint} of ${endpointTotal} and cluster ${cluster} of ${clusterTotal}`)
+  }
+
+  handleZigBeeDevIncoming(message) {
+    const ieeeAddr = message.data
+    const data = zigbee.device(ieeeAddr)
+    this.initDevice(data)
+  }
+
+  handleZigBeeDevLeaving(message) {
+    const ieeeAddr = message.data
+    this.log(`Device announced leaving and is removed, id: ${ieeeAddr}`)
+    const uuid = UUIDGen.generate(ieeeAddr)
+    const accessory = this.getAccessory(uuid)
+    this.api.unregisterPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
+    delete this.devices[ieeeAddr]
+    delete this.accessories[uuid]
+  }
+
+  async handleZigBeeReady() {
+    this.log('[ZigBee:ready] ZigBee initialized')
     // Wait a little bit before device initialization to avoid timeout error
-    setTimeout(() => {
-      zigbee.list().forEach(data => this.initDevice(data))
-    }, 2000)
+    await sleep(2000)
+    this.initPermitJoinAccessory()
+    zigbee.list().forEach(data => this.initDevice(data))
   }
 
   setDevice(device) {
@@ -158,6 +195,22 @@ class ZigBeePlatform {
   
     this.setDevice(device)
     this.log('Registered device:', manufacturer, model, ieeeAddr)
+  }
+
+  initPermitJoinAccessory() {
+    const platform = this
+    const uuid = UUIDGen.generate('zigbee:permit-join')
+    const accessory = this.getAccessory(uuid)
+    const log = (...args) => this.log('[PermitJoinAccessory]', ...args)
+    this.permitJoinAccessory = new PermitJoinAccessory({
+      accessory,
+      platform,
+      log,
+      Accessory,
+      Service,
+      Characteristic,
+      UUIDGen,
+    })
   }
 
   configureAccessory(accessory) {

@@ -9,7 +9,8 @@
   "platforms": [
     {
       "platform": "ZigBeePlatform",
-      "port": "/dev/tty.usbmodem14414221"
+      "port": "/dev/tty.usbmodem14414221",
+      "permitJoinTimeout": 120
     }
   ]
 }
