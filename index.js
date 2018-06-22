@@ -106,8 +106,10 @@ class ZigBeePlatform {
     this.log(`Join progress: interview endpoint ${endpoint} of ${endpointTotal} and cluster ${cluster} of ${clusterTotal}`)
   }
 
-  handleZigBeeDevIncoming(message) {
+  async handleZigBeeDevIncoming(message) {
     const ieeeAddr = message.data
+    // Wait a little bit for database sync
+    await sleep(1500)
     const data = zigbee.device(ieeeAddr)
     this.initDevice(data)
   }
@@ -117,9 +119,12 @@ class ZigBeePlatform {
     this.log(`Device announced leaving and is removed, id: ${ieeeAddr}`)
     const uuid = UUIDGen.generate(ieeeAddr)
     const accessory = this.getAccessory(uuid)
-    this.api.unregisterPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
-    delete this.devices[ieeeAddr]
-    delete this.accessories[uuid]
+    // Sometimes we can unpair device which doesn't exist in HomeKit
+    if (accessory) {
+      this.api.unregisterPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
+      delete this.devices[ieeeAddr]
+      delete this.accessories[uuid]
+    }
   }
 
   async handleZigBeeReady() {
