@@ -108,14 +108,22 @@ class ZigBeePlatform {
 
   async handleZigBeeDevIncoming(message) {
     const ieeeAddr = message.data
-    // Wait a little bit for database sync
-    await sleep(1500)
-    const data = zigbee.device(ieeeAddr)
-    this.initDevice(data)
+    // Stop permit join
+    this.permitJoinAccessory.setPermitJoin(false)
+    this.log(`Device announced incoming and is added, id: ${ieeeAddr}`)
+    // Ignore if the device exists
+    if (!this.getDevice(ieeeAddr)) {
+      // Wait a little bit for a database sync
+      await sleep(1500)
+      const data = zigbee.device(ieeeAddr)
+      this.initDevice(data)
+    }
   }
 
   handleZigBeeDevLeaving(message) {
     const ieeeAddr = message.data
+    // Stop permit join
+    this.permitJoinAccessory.setPermitJoin(false)
     this.log(`Device announced leaving and is removed, id: ${ieeeAddr}`)
     const uuid = UUIDGen.generate(ieeeAddr)
     const accessory = this.getAccessory(uuid)
