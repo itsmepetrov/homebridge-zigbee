@@ -3,6 +3,7 @@ const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
 const sleep = require('./lib/utils/sleep')
 const castArray = require('./lib/utils/castArray')
+const parseModel = require('./lib/utils/parseModel')
 const findSerialPort = require('./lib/utils/findSerialPort')
 const PermitJoinAccessory = require('./lib/PermitJoinAccessory');
 const devices = Object.values(requireDir('./lib/devices'))
@@ -171,7 +172,7 @@ class ZigBeePlatform {
       }
       const description = Device.description()
       if (
-        castArray(description.model).includes(model) &&
+        castArray(description.model).includes(model.replace(/[^\x00-\x7F]/g, '')) &&
         castArray(description.manufacturer).includes(manufacturer)
       ) {
         return Device
@@ -181,7 +182,7 @@ class ZigBeePlatform {
 
   initDevice(data) {
     const platform = this
-    const model = data.modelId
+    const model = parseModel(data.modelId)
     const manufacturer = data.manufName
     const ieeeAddr = data.ieeeAddr
     const uuid = UUIDGen.generate(ieeeAddr)
