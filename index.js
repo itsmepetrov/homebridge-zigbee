@@ -139,8 +139,8 @@ class ZigBeePlatform {
   async handleZigBeeReady() {
     this.log('[ZigBee:ready] ZigBee initialized')
     // Wait a little bit before device initialization to avoid timeout error
-    await sleep(2000)
     this.initPermitJoinAccessory()
+    // await sleep(2000)
     zigbee.list().forEach(data => this.initDevice(data))
   }
 
