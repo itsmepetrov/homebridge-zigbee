@@ -48,7 +48,7 @@ class ZigBeePlatform {
   async startZigBee() {
     zigbee.init({
       port: this.config.port || await findSerialPort(),
-      db: this.config.database || './shepherd.db',
+      db: this.config.database || './database.db',
     })
     zigbee.on('ready', this.handleZigBeeReady)
     zigbee.on('error', this.handleZigBeeError)
