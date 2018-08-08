@@ -41,8 +41,8 @@
   "dependencies": {
     "lodash.get": "^4.4.2",
     "require-dir": "^1.0.0",
-    "serialport": "^4.0.7",
+    "serialport": "^6.2.2",
     "zcl-id": "^0.3.2",
-    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#316ed853b77d02e977afdb750209b6a9f917eaa9"
+    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#8016819136dc17eaca3e3f3381144f2b048572ca"
   }
 }
