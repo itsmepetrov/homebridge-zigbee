@@ -43,6 +43,6 @@
     "require-dir": "^1.0.0",
     "serialport": "^6.2.2",
     "zcl-id": "^0.3.2",
-    "zigbee-shepherd": "github:itsmepetrov/zigbee-shepherd#faa4e4db8091f4d72ef9e19c3ace27509ecde53d"
+    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#00cff75048487ffaff65c28dada4dc46929e0849"
   }
 }

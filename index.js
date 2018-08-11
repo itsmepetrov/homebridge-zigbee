@@ -1,12 +1,20 @@
-const get = require('lodash.get');
+const get = require('lodash.get')
 const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
 const sleep = require('./lib/utils/sleep')
 const castArray = require('./lib/utils/castArray')
 const parseModel = require('./lib/utils/parseModel')
 const findSerialPort = require('./lib/utils/findSerialPort')
-const PermitJoinAccessory = require('./lib/PermitJoinAccessory');
+const PermitJoinAccessory = require('./lib/PermitJoinAccessory')
 const devices = Object.values(requireDir('./lib/devices'))
+
+// Only for beta period
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception', error)
+})
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection', reason)
+})
 
 let Accessory, Service, Characteristic, UUIDGen
 
@@ -181,34 +189,38 @@ class ZigBeePlatform {
   }
 
   initDevice(data) {
-    const platform = this
-    const model = parseModel(data.modelId)
-    const manufacturer = data.manufName
-    const ieeeAddr = data.ieeeAddr
-    const uuid = UUIDGen.generate(ieeeAddr)
-    const accessory = this.getAccessory(uuid)
-    const log = (...args) => this.log(manufacturer, model, ieeeAddr, ...args)
-    const Device = this.recognizeDevice({ model, manufacturer })
+    try {
+      const platform = this
+      const model = parseModel(data.modelId)
+      const manufacturer = data.manufName
+      const ieeeAddr = data.ieeeAddr
+      const uuid = UUIDGen.generate(ieeeAddr)
+      const accessory = this.getAccessory(uuid)
+      const log = (...args) => this.log(manufacturer, model, ieeeAddr, ...args)
+      const Device = this.recognizeDevice({ model, manufacturer })
 
-    if (!Device) {
-      return this.log('Unrecognized device:', manufacturer, model, ieeeAddr)
+      if (!Device) {
+        return this.log('Unrecognized device:', manufacturer, model, ieeeAddr)
+      }
+
+      const device = new Device({
+        model,
+        manufacturer,
+        ieeeAddr,
+        accessory,
+        platform,
+        log,
+        Accessory,
+        Service,
+        Characteristic,
+        UUIDGen,
+      })
+    
+      this.setDevice(device)
+      this.log('Registered device:', manufacturer, model, ieeeAddr)
+    } catch (error) {
+      this.log(`Unable to initialize device ${data && data.ieeeAddr}, try to remove it and add it again.`)
     }
-
-    const device = new Device({
-      model,
-      manufacturer,
-      ieeeAddr,
-      accessory,
-      platform,
-      log,
-      Accessory,
-      Service,
-      Characteristic,
-      UUIDGen,
-    })
-  
-    this.setDevice(device)
-    this.log('Registered device:', manufacturer, model, ieeeAddr)
   }
 
   initPermitJoinAccessory() {
