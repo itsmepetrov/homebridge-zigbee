@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "lint": "eslint .",
     "permit-join": "node scripts/permit-join.js"
   },
   "engines": {
@@ -44,5 +44,10 @@
     "serialport": "^6.2.2",
     "zcl-id": "^0.3.2",
     "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#00cff75048487ffaff65c28dada4dc46929e0849"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
   }
 }

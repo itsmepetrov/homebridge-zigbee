@@ -6,19 +6,21 @@ const castArray = require('./lib/utils/castArray')
 const parseModel = require('./lib/utils/parseModel')
 const findSerialPort = require('./lib/utils/findSerialPort')
 const PermitJoinAccessory = require('./lib/PermitJoinAccessory')
+
 const devices = Object.values(requireDir('./lib/devices'))
 
 // Only for beta period
 process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception', error)
+  console.error('Uncaught Exception', error) // eslint-disable-line no-console
 })
 process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection', reason)
+  console.error('Unhandled Rejection', reason) // eslint-disable-line no-console
 })
 
+// eslint-disable-next-line one-var, one-var-declaration-per-line
 let Accessory, Service, Characteristic, UUIDGen
 
-module.exports = function(homebridge) {
+module.exports = function main(homebridge) {
   Accessory = homebridge.platformAccessory
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
@@ -74,7 +76,7 @@ class ZigBeePlatform {
     this.log('[ZigBee:error] error:', error)
   }
 
-  handleZigBeeIndication(message) {
+  handleZigBeeIndication(message) { // eslint-disable-line consistent-return
     switch (message.type) {
       // Supported indication messages
       case 'attReport':
@@ -87,7 +89,7 @@ class ZigBeePlatform {
       case 'devLeaving':
         return this.handleZigBeeDevLeaving(message)
       default:
-        return
+        // Do nothing
     }
   }
 
@@ -112,7 +114,10 @@ class ZigBeePlatform {
     const endpointTotal = get(message, 'status.endpoint.total')
     const cluster = get(message, 'status.endpoint.cluster.current')
     const clusterTotal = get(message, 'status.endpoint.cluster.total')
-    this.log(`Join progress: interview endpoint ${endpoint} of ${endpointTotal} and cluster ${cluster} of ${clusterTotal}`)
+    this.log(
+      `Join progress: interview endpoint ${endpoint} of ${endpointTotal} `
+      + `and cluster ${cluster} of ${clusterTotal}`
+    )
   }
 
   async handleZigBeeDevIncoming(message) {
@@ -174,14 +179,14 @@ class ZigBeePlatform {
   }
 
   recognizeDevice({ model, manufacturer }) {
-    for (let Device of devices) {
+    for (const Device of devices) {
       if (!Device.description) {
-        continue
+        continue // eslint-disable-line no-continue
       }
       const description = Device.description()
       if (
-        castArray(description.model).includes(model.replace(/[^\x00-\x7F]/g, '')) &&
-        castArray(description.manufacturer).includes(manufacturer)
+        castArray(description.model).includes(model)
+        && castArray(description.manufacturer).includes(manufacturer)
       ) {
         return Device
       }
@@ -215,11 +220,13 @@ class ZigBeePlatform {
         Characteristic,
         UUIDGen,
       })
-    
+
       this.setDevice(device)
       this.log('Registered device:', manufacturer, model, ieeeAddr)
     } catch (error) {
-      this.log(`Unable to initialize device ${data && data.ieeeAddr}, try to remove it and add it again.`)
+      this.log(
+        `Unable to initialize device ${data && data.ieeeAddr}, `
+        + 'try to remove it and add it again.')
     }
   }
 

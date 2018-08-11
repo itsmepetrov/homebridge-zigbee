@@ -1,6 +1,8 @@
 const zigbee = require('../lib/zigbee')
 const findSerialPort = require('../lib/utils/findSerialPort')
 
+/* eslint-disable no-console */
+
 async function init() {
   zigbee.init({
     port: process.argv[2] || await findSerialPort(),
@@ -29,7 +31,11 @@ async function init() {
   zigbee.on('ind', (msg) => {
     switch (msg.type) {
       case 'devInterview':
-        console.log(`Interview endpoint: ${msg.status.endpoint.current} of ${msg.status.endpoint.total} cluster ${msg.status.endpoint.cluster.current} of ${msg.status.endpoint.cluster.total}`)
+        console.log(
+          `Interview endpoint: ${msg.status.endpoint.current} `
+          + `of ${msg.status.endpoint.total} `
+          + `cluster ${msg.status.endpoint.cluster.current} `
+          + `of ${msg.status.endpoint.cluster.total}`)
         break
       case 'devIncoming':
         console.log(`Device joined, id: ${msg.data}`)
@@ -41,8 +47,8 @@ async function init() {
         console.log('Report:', msg)
         break
       case 'statusChange':
-      console.log('Status:', msg.endpoints[0].device.ieeeAddr)
-      console.log('Status:', msg.data)
+        console.log('Status:', msg.endpoints[0].device.ieeeAddr)
+        console.log('Status:', msg.data)
         break
       case 'devStatus':
         console.log('Dev status:', msg.data)
