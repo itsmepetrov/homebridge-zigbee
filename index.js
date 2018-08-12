@@ -68,12 +68,12 @@ class ZigBeePlatform {
 
   handleZigBeeStart(error) {
     if (error) {
-      this.log('[ZigBee:ready] error:', error)
+      this.log('error:', error)
     }
   }
 
   handleZigBeeError(error) {
-    this.log('[ZigBee:error] error:', error)
+    this.log('error:', error)
   }
 
   handleZigBeeIndication(message) { // eslint-disable-line consistent-return
