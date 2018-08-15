@@ -1,4 +1,5 @@
 const get = require('lodash.get')
+const retry = require('async-retry')
 const requireDir = require('require-dir')
 const zigbee = require('./lib/zigbee')
 const sleep = require('./lib/utils/sleep')
@@ -38,7 +39,6 @@ class ZigBeePlatform {
     this.permitJoinAccessory = null
 
     // Bind handlers
-    this.handleZigBeeStart = this.handleZigBeeStart.bind(this)
     this.handleZigBeeError = this.handleZigBeeError.bind(this)
     this.handleZigBeeReady = this.handleZigBeeReady.bind(this)
     this.handleZigBeeIndication = this.handleZigBeeIndication.bind(this)
@@ -60,14 +60,28 @@ class ZigBeePlatform {
       port: this.config.port || await findSerialPort(),
       db: this.config.database || './database.db',
     })
+
     zigbee.on('ready', this.handleZigBeeReady)
     zigbee.on('error', this.handleZigBeeError)
     zigbee.on('ind', this.handleZigBeeIndication)
-    zigbee.start(this.handleZigBeeStart)
-  }
 
-  handleZigBeeStart(error) {
-    if (error) {
+    const retrier = async () => {
+      try {
+        await zigbee.start()
+      } catch (error) {
+        await zigbee.stop()
+        throw error
+      }
+    }
+
+    try {
+      await retry(retrier, {
+        retries: 20,
+        minTimeout: 5000,
+        maxTimeout: 5000,
+        onRetry: () => this.log('retrying connect to hardware'),
+      })
+    } catch (error) {
       this.log('error:', error)
     }
   }

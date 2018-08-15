@@ -39,11 +39,12 @@
   },
   "homepage": "https://github.com/itsmepetrov/homebridge-zigbee#readme",
   "dependencies": {
+    "async-retry": "^1.2.1",
     "lodash.get": "^4.4.2",
     "require-dir": "^1.0.0",
     "serialport": "^6.2.2",
     "zcl-id": "^0.3.2",
-    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#00cff75048487ffaff65c28dada4dc46929e0849"
+    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#1284cafcfb69c717d049f270444a3999c8b37372"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
