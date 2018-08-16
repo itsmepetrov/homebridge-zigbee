@@ -1,3 +1,4 @@
+const path = require('path')
 const get = require('lodash.get')
 const retry = require('async-retry')
 const requireDir = require('require-dir')
@@ -58,7 +59,7 @@ class ZigBeePlatform {
   async startZigBee() {
     zigbee.init({
       port: this.config.port || await findSerialPort(),
-      db: this.config.database || './database.db',
+      db: this.config.database || path.join(this.api.user.storagePath(), './zigbee.db'),
     })
 
     zigbee.on('ready', this.handleZigBeeReady)
@@ -79,7 +80,7 @@ class ZigBeePlatform {
         retries: 20,
         minTimeout: 5000,
         maxTimeout: 5000,
-        onRetry: () => this.log('retrying connect to hardware'),
+        onRetry: () => this.log('Retrying connect to hardware'),
       })
     } catch (error) {
       this.log('error:', error)
@@ -164,10 +165,10 @@ class ZigBeePlatform {
   }
 
   async handleZigBeeReady() {
-    this.log('[ZigBee:ready] ZigBee initialized')
-    // Wait a little bit before device initialization to avoid timeout error
+    this.log('ZigBee platform initialized')
+    // Init permit join accessory
     this.initPermitJoinAccessory()
-    // await sleep(2000)
+    // Init devices
     zigbee.list().forEach(data => this.initDevice(data))
   }
 
