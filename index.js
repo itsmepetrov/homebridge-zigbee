@@ -218,12 +218,14 @@ class ZigBeePlatform {
       const accessory = this.getAccessory(uuid)
       const log = (...args) => this.log(manufacturer, model, ieeeAddr, ...args)
       const Device = this.recognizeDevice({ model, manufacturer })
+      const name = Device.description().name
 
       if (!Device) {
-        return this.log('Unrecognized device:', manufacturer, model, ieeeAddr)
+        return this.log('Unrecognized device:', ieeeAddr, manufacturer, model)
       }
 
       const device = new Device({
+        name,
         model,
         manufacturer,
         ieeeAddr,
@@ -237,7 +239,7 @@ class ZigBeePlatform {
       })
 
       this.setDevice(device)
-      this.log('Registered device:', manufacturer, model, ieeeAddr)
+      this.log('Registered device:', ieeeAddr, manufacturer, model)
     } catch (error) {
       this.log(
         `Unable to initialize device ${data && data.ieeeAddr}, `
