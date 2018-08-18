@@ -198,10 +198,9 @@ class ZigBeePlatform {
       if (!Device.description) {
         continue // eslint-disable-line no-continue
       }
-      const description = Device.description()
       if (
-        castArray(description.model).includes(model)
-        && castArray(description.manufacturer).includes(manufacturer)
+        castArray(Device.description.model).includes(model)
+        && castArray(Device.description.manufacturer).includes(manufacturer)
       ) {
         return Device
       }
@@ -218,7 +217,7 @@ class ZigBeePlatform {
       const accessory = this.getAccessory(uuid)
       const log = (...args) => this.log(manufacturer, model, ieeeAddr, ...args)
       const Device = this.recognizeDevice({ model, manufacturer })
-      const name = Device.description().name
+      const name = get(Device, 'description.name')
 
       if (!Device) {
         return this.log('Unrecognized device:', ieeeAddr, manufacturer, model)

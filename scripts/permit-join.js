@@ -58,11 +58,7 @@ async function init() {
     }
   })
 
-  zigbee.start((error) => {
-    if (error) {
-      console.error('Error:', error)
-    }
-  })
+  await zigbee.start()
 }
 
 init()

@@ -43,8 +43,9 @@
     "lodash.get": "^4.4.2",
     "require-dir": "^1.0.0",
     "serialport": "^6.2.2",
-    "zcl-id": "^0.3.2",
-    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#1284cafcfb69c717d049f270444a3999c8b37372"
+    "zcl-id": "itsmepetrov/zcl-id#d144b89a2b471266fb01ede9cce0f64afdbef825",
+    "zcl-packet": "itsmepetrov/zcl-packet#7928254d3f3d81892fa669ca852736e2725cd18c",
+    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#9a865b444951abd634a258f596029a3f6f982fb3"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
