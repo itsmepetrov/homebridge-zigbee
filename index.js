@@ -60,6 +60,7 @@ class ZigBeePlatform {
     zigbee.init({
       port: this.config.port || await findSerialPort(),
       db: this.config.database || path.join(this.api.user.storagePath(), './zigbee.db'),
+      channels: castArray(this.config.channels || 11),
     })
 
     zigbee.on('ready', this.handleZigBeeReady)
