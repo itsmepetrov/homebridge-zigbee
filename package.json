@@ -44,7 +44,7 @@
     "require-dir": "^1.0.0",
     "serialport": "^6.2.2",
     "zcl-id": "itsmepetrov/zcl-id#d144b89a2b471266fb01ede9cce0f64afdbef825",
-    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#a7b2a9d7fa4a0cfe9a889da66f472f977d45c9a5"
+    "zigbee-shepherd": "itsmepetrov/zigbee-shepherd#1e86104f33b5e066f7b5c9fe1b65565034b82d72"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
