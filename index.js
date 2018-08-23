@@ -182,7 +182,7 @@ class ZigBeePlatform {
     // Init devices
     zigbee.list().forEach(data => this.initDevice(data))
     // Init device polling
-    pollDevices(true)
+    pollDevices(true, this.log)
   }
 
   setDevice(device) {
