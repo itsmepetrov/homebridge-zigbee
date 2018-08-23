@@ -6,6 +6,7 @@ const zigbee = require('./lib/zigbee')
 const sleep = require('./lib/utils/sleep')
 const castArray = require('./lib/utils/castArray')
 const parseModel = require('./lib/utils/parseModel')
+const pollDevices = require('./lib/utils/pollDevices')
 const findSerialPort = require('./lib/utils/findSerialPort')
 const PermitJoinAccessory = require('./lib/PermitJoinAccessory')
 
@@ -60,6 +61,7 @@ class ZigBeePlatform {
     zigbee.init({
       port: this.config.port || await findSerialPort(),
       db: this.config.database || path.join(this.api.user.storagePath(), './zigbee.db'),
+      panId: this.config.panId || 0x4500,
       channels: castArray(this.config.channels || 11),
     })
 
@@ -166,11 +168,21 @@ class ZigBeePlatform {
   }
 
   async handleZigBeeReady() {
-    this.log('ZigBee platform initialized')
+    const info = zigbee.info()
+    this.log('ZigBee platform initialized, info:')
+    this.log('channel:', info.net.channel)
+    this.log('pan id:', info.net.panId)
+    this.log('extended pan id:', info.net.extPanId)
+    this.log('ieee address:', info.net.ieeeAddr)
+    this.log('nwk address:', info.net.nwkAddr)
+    this.log('firmware version:', info.firmware.version)
+    this.log('firmware revision:', info.firmware.revision)
     // Init permit join accessory
     this.initPermitJoinAccessory()
     // Init devices
     zigbee.list().forEach(data => this.initDevice(data))
+    // Init device polling
+    pollDevices(true)
   }
 
   setDevice(device) {
