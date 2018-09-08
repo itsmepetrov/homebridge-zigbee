@@ -26,7 +26,7 @@ The CC2531 USB stick needs to be flashed with a custom firmware. The following i
 3. If the light on the CC debugger is RED press set reset button on the CC debugger. The light on the CC debugger should now turn GREEN. If not use [CC debugger user guide](http://www.ti.com/lit/ug/swru197h/swru197h.pdf) to troubleshoot your problem.
 ![How to connect](assets/connected.jpg)
 
-4. Download the firmware [CC2531ZNP-Pro-Secure_LinkKeyJoin.hex](../firmware/CC2531ZNP-Pro-Secure_LinkKeyJoin.hex)
+4. Download the firmware [CC2531ZNP-2018090201.hex](../firmware/CC2531ZNP-2018090201.hex)
 
 5. Start SmartRF Flash Programmer, setup as shown below and press `Perform actions`.
 ![SmartRF Flash Programmer](assets/smartrf.png)
