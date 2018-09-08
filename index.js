@@ -6,7 +6,7 @@ const zigbee = require('./lib/zigbee')
 const sleep = require('./lib/utils/sleep')
 const castArray = require('./lib/utils/castArray')
 const parseModel = require('./lib/utils/parseModel')
-const pollDevices = require('./lib/utils/pollDevices')
+const routerPolling = require('./lib/utils/routerPolling')
 const findSerialPort = require('./lib/utils/findSerialPort')
 const PermitJoinAccessory = require('./lib/PermitJoinAccessory')
 
@@ -39,6 +39,9 @@ class ZigBeePlatform {
     this.devices = {}
     this.accessories = {}
     this.permitJoinAccessory = null
+
+    // Init log for router polling service
+    routerPolling.log = log
 
     // Bind handlers
     this.handleZigBeeError = this.handleZigBeeError.bind(this)
@@ -181,8 +184,8 @@ class ZigBeePlatform {
     this.initPermitJoinAccessory()
     // Init devices
     zigbee.list().forEach(data => this.initDevice(data))
-    // Init device polling
-    pollDevices(true, this.log)
+    // Some routers need polling to prevent them from sleeping.
+    routerPolling.start(this.config.routerPollingInterval)
   }
 
   setDevice(device) {
