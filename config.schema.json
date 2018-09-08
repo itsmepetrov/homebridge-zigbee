@@ -1,0 +1,82 @@
+{
+  "pluginAlias": "ZigBeePlatform",
+  "pluginType": "platform",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "ZigBee",
+        "minLength": 1,
+        "required": true
+      },
+      "port": {
+        "title": "Port",
+        "description": "Port for USB stick (example: /dev/tty.usbmodem144). If not set, it tries to find port automatically.",
+        "type": "string",
+        "required": false
+      },
+      "panId": {
+        "title": "PanId",
+        "description": "Identify the ZigBee PAN-ID. This id should be a value between 0 and 16383 (0x3FFF). You can also set it to 65535 (0xFFFF) to let ZigBee choose a random PAN-ID on its own.",
+        "type": "number",
+        "oneOf": [
+          {
+            "type": "number",
+            "default": 65535,
+            "minimum": 65535,
+            "maximum": 65535
+          },
+          {
+            "type": "number",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 16383
+          }
+        ],
+        "default": 65535,
+        "required": true
+      },
+      "channel": {
+        "title": "Channel",
+        "description": "Channel for your ZigBee dongle (11-25).",
+        "type": "number",
+        "enum": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+        "default": 11,
+        "required": true
+      },
+      "database": {
+        "title": "Database",
+        "description": "Path to zigbee database. If not set, it uses 'homebridge_storage_path/zigbee.db' path.",
+        "type": "string",
+        "required": false
+      },
+      "permitJoinTimeout": {
+        "title": "Permit Join Timeout",
+        "description": "Timeout of permit join command (seconds).",
+        "type": "number",
+        "default": 120,
+        "minimum": 0,
+        "required": false
+      },
+      "routerPollingInterval": {
+        "title": "Router Polling Interval",
+        "description": "Router polling intervall, some routers need polling to prevent them from sleeping (seconds).",
+        "type": "number",
+        "default": 60,
+        "minimum": 30,
+        "required": false
+      }
+    }
+  },
+  "form": [
+    "name",
+    "port",
+    "panId",
+    "channel",
+    "database",
+    "permitJoinTimeout",
+    "routerPollingInterval"
+  ]
+}

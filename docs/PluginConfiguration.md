@@ -23,11 +23,11 @@
 
 The following configuration options are available:
 
-| Name                  | Default         | Description                                                                                                                      |
-|-----------------------|-----------------------------------------|----------------------------------------------------------------------------------------------------------|
-| port                  | `undefined`                             | Port for USB stick (_example_: `/dev/tty.usbmodem144`). If not set, it tries to find port automatically. |
-| panId                 | `0x4500`                                | Identify the ZigBee PAN. This id should be a value between 0 and 0x3FFF.                                 |
-| channels              | `11`                                    | Channel for your ZigBee dongle. Can be an array of possible channels: `[11, 20]`.                        |
-| database              | `'<homebridge_storage_path>/zigbee.db'` | Path to zigbee database.                                                                                 |
-| permitJoinTimeout     | `120`                                   | Timeout of permit join command (seconds).                                                                |
-| routerPollingInterval | `60`                                    | Router polling intervall, some routers need polling to prevent them from sleeping (seconds).             |
+| Name                  | Default  | Description                                                                                                                                                |
+|-----------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| port                  | `null`   | Port for USB stick (_example_: `/dev/tty.usbmodem144`). If not set, it tries to find port automatically.                                                   |
+| panId                 | `0xFFFF` | Identify the ZigBee PAN-ID. This id should be a value between 0 and 0x3FFF. You can also set it to 0xFFFF to let ZigBee choose a random PAN-ID on its own. |
+| channel               | `11`     | Channel for your ZigBee dongle (11-25).                                                                                                                    |
+| database              | `null`   | Path to zigbee database. If not set, it uses '<homebridge_storage_path>/zigbee.db' path.                                                                   |
+| permitJoinTimeout     | `120`    | Timeout of permit join command (seconds).                                                                                                                  |
+| routerPollingInterval | `60`     | Router polling intervall, some routers need polling to prevent them from sleeping (seconds).                                                               |
