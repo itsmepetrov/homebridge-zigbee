@@ -40,9 +40,6 @@ class ZigBeePlatform {
     this.accessories = {}
     this.permitJoinAccessory = null
 
-    // Init log for router polling service
-    routerPolling.log = log
-
     // Bind handlers
     this.handleZigBeeError = this.handleZigBeeError.bind(this)
     this.handleZigBeeReady = this.handleZigBeeReady.bind(this)
@@ -190,6 +187,10 @@ class ZigBeePlatform {
     this.initPermitJoinAccessory()
     // Init devices
     zigbee.list().forEach(data => this.initDevice(data))
+    // Init log for router polling service
+    if (!this.config.disablePingLog) {
+      routerPolling.log = this.log
+    }
     // Some routers need polling to prevent them from sleeping.
     routerPolling.start(this.config.routerPollingInterval)
   }

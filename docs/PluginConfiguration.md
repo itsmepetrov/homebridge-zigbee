@@ -32,3 +32,4 @@ The following configuration options are available:
 | permitJoinTimeout     | `120`       | Timeout of permit join command (seconds).                                                                                                                  |
 | routerPollingInterval | `60`        | Router polling intervall, some routers need polling to prevent them from sleeping (seconds).                                                               |
 | disableLed            | `false`     | Turn off the stick led indicator.                                                                                                                          |
+| disablePingLog        | `false`     | Disable ping records in log.                                                                                                                               |

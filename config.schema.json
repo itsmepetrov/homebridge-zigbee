@@ -74,6 +74,13 @@
         "type": "boolean",
         "default": false,
         "required": false
+      },
+      "disablePingLog": {
+        "title": "Disable Ping Log",
+        "description": "Disable ping records in log.",
+        "type": "boolean",
+        "default": false,
+        "required": false
       }
     }
   },
@@ -85,6 +92,7 @@
     "database",
     "permitJoinTimeout",
     "routerPollingInterval",
-    "disableLed"
+    "disableLed",
+    "disablePingLog"
   ]
 }
