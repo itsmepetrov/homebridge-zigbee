@@ -180,6 +180,10 @@ class ZigBeePlatform {
     this.log('nwk address:', info.net.nwkAddr)
     this.log('firmware version:', info.firmware.version)
     this.log('firmware revision:', info.firmware.revision)
+    // Set led indicator
+    zigbee.request('UTIL', 'ledControl', {
+      ledid: 3, mode: this.config.disableLed ? 0 : 1,
+    })
     // Init permit join accessory
     this.initPermitJoinAccessory()
     // Init devices

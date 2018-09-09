@@ -67,6 +67,13 @@
         "default": 60,
         "minimum": 30,
         "required": false
+      },
+      "disableLed": {
+        "title": "Disable Led",
+        "description": "Turn off the stick led indicator.",
+        "type": "boolean",
+        "default": false,
+        "required": false
       }
     }
   },
@@ -77,6 +84,7 @@
     "channel",
     "database",
     "permitJoinTimeout",
-    "routerPollingInterval"
+    "routerPollingInterval",
+    "disableLed"
   ]
 }
