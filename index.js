@@ -173,6 +173,7 @@ class ZigBeePlatform {
   async handleZigBeeReady() {
     const info = zigbee.info()
     this.log('ZigBee platform initialized, info:')
+    this.log('------------------------------------')
     this.log('channel:', info.net.channel)
     this.log('pan id:', info.net.panId)
     this.log('extended pan id:', info.net.extPanId)
@@ -180,6 +181,7 @@ class ZigBeePlatform {
     this.log('nwk address:', info.net.nwkAddr)
     this.log('firmware version:', info.firmware.version)
     this.log('firmware revision:', info.firmware.revision)
+    this.log('------------------------------------')
     // Set led indicator
     zigbee.request('UTIL', 'ledControl', {
       ledid: 3, mode: this.config.disableLed ? 0 : 1,
