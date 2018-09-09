@@ -264,7 +264,8 @@ class ZigBeePlatform {
     } catch (error) {
       this.log(
         `Unable to initialize device ${data && data.ieeeAddr}, `
-        + 'try to remove it and add it again.')
+        + 'try to remove it and add it again.\n')
+      this.log('Reason:', error)
     }
   }
 
