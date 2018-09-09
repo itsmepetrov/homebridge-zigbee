@@ -33,3 +33,11 @@ The following configuration options are available:
 | routerPollingInterval | `60`        | Router polling intervall, some routers need polling to prevent them from sleeping (seconds).                                                               |
 | disableLed            | `false`     | Turn off the stick led indicator.                                                                                                                          |
 | disablePingLog        | `false`     | Disable ping records in log.                                                                                                                               |
+
+## Extra
+
+### homebridge-config-ui-x
+
+It can be configured via [homebridge-config-ui-x](https://www.npmjs.com/package/homebridge-config-ui-x) plugin.
+
+![homebridge-config-ui-x configuration](assets/homebridge_config_ui_x_configuration.png)
