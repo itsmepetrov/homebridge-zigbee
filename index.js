@@ -167,7 +167,7 @@ class ZigBeePlatform {
     }
   }
 
-  async handleZigBeeReady() {
+  handleZigBeeReady() {
     const info = zigbee.info()
     this.log('ZigBee platform initialized, info:')
     this.log('------------------------------------')
@@ -182,6 +182,8 @@ class ZigBeePlatform {
     // Set led indicator
     zigbee.request('UTIL', 'ledControl', {
       ledid: 3, mode: this.config.disableLed ? 0 : 1,
+    }).catch(() => {
+      /* Unable to set led indicator, may be your device doesn\'t support it */
     })
     // Init permit join accessory
     this.initPermitJoinAccessory()
