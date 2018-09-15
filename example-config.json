@@ -11,7 +11,9 @@
       "platform": "ZigBeePlatform",
       "port": "/dev/tty.usbmodem14414221",
       "permitJoinTimeout": 120,
-      "channels": 11
+      "channel": 11,
+      "disableLed": true,
+      "disablePingLog": true
     }
   ]
 }
