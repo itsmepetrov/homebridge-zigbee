@@ -8,7 +8,11 @@ const castArray = require('./lib/utils/castArray')
 const parseModel = require('./lib/utils/parseModel')
 const routerPolling = require('./lib/utils/routerPolling')
 const findSerialPort = require('./lib/utils/findSerialPort')
+const addCustomTypes = require('./lib/utils/customTypes')
 const PermitJoinAccessory = require('./lib/PermitJoinAccessory')
+
+const PLUGIN_NAME = 'homebridge-zigbee'
+const PLATFORM_NAME = 'ZigBeePlatform'
 
 const devices = Object.values(requireDir('./lib/devices'))
 
@@ -24,11 +28,12 @@ process.on('unhandledRejection', (reason) => {
 let Accessory, Service, Characteristic, UUIDGen
 
 module.exports = function main(homebridge) {
+  addCustomTypes(homebridge.hap)
   Accessory = homebridge.platformAccessory
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
   UUIDGen = homebridge.hap.uuid
-  homebridge.registerPlatform('homebridge-zigbee', 'ZigBeePlatform', ZigBeePlatform, true)
+  homebridge.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, ZigBeePlatform, true)
 }
 
 class ZigBeePlatform {
@@ -161,7 +166,7 @@ class ZigBeePlatform {
     const accessory = this.getAccessory(uuid)
     // Sometimes we can unpair device which doesn't exist in HomeKit
     if (accessory) {
-      this.api.unregisterPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
       delete this.devices[ieeeAddr]
       delete this.accessories[uuid]
     }
@@ -215,7 +220,7 @@ class ZigBeePlatform {
 
   registerAccessory(accessory) {
     this.setAccessory(accessory)
-    this.api.registerPlatformAccessories('homebridge-zigbee', 'ZigBeePlatform', [accessory])
+    this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
   }
 
   recognizeDevice({ model, manufacturer }) {
@@ -292,7 +297,24 @@ class ZigBeePlatform {
     this.setAccessory(accessory)
   }
 
-  removeAccessory() {
-    this.log('removeAccessory is not implemented yet')
+  removeAccessory(accessory) {
+    try {
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
+    } catch (error) {
+      // Do nothing
+    }
+  }
+
+  async removeDevice(device) {
+    try {
+      this.log('Removing device:', device.ieeeAddr)
+      await zigbee.remove(device.ieeeAddr)
+    } catch (error) {
+      this.log('Unable to remove properly, trying to unregister device:', device.ieeeAddr)
+      await zigbee.unregister(device.ieeeAddr)
+    } finally {
+      this.log('Device has been removed:', device.ieeeAddr)
+      this.removeAccessory(device.accessory)
+    }
   }
 }
