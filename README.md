@@ -22,7 +22,7 @@ This homebridge plugin exposes ZigBee lights, plugs, sensors, switches, end othe
 
 [![paypal](https://user-images.githubusercontent.com/1177226/47965131-0a54bb80-e054-11e8-8707-bf143b7cdea7.png)](https://paypal.me/itsmepetrov)
 [![ynadex-money](https://user-images.githubusercontent.com/1177226/47965127-0759cb00-e054-11e8-8978-bc74dd2221ae.png)](https://money.yandex.ru/to/410017103369501)
-[![coinbase](https://user-images.githubusercontent.com/1177226/47965132-0f196f80-e054-11e8-88ae-a06fd68be4f2.png)](https://commerce.coinbase.com/checkout/06a9c2ad-fc6a-488d-8180-1254befb4647)
+[![coinbase](https://user-images.githubusercontent.com/1177226/47965132-0f196f80-e054-11e8-88ae-a06fd68be4f2.png)](https://commerce.coinbase.com/checkout/e49e6b5b-6471-4b5a-a1ca-616e33e7d68b)
 
 ## License
 
