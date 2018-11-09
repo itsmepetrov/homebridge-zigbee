@@ -41,7 +41,10 @@
   "homepage": "https://github.com/itsmepetrov/homebridge-zigbee#readme",
   "dependencies": {
     "async-retry": "^1.2.1",
+    "fakegato-history": "^0.5.2",
+    "homebridge-lib": "^2.0.0",
     "lodash.get": "^4.4.2",
+    "nanoid": "^2.0.0",
     "require-dir": "^1.0.0",
     "serialport": "^6.2.2",
     "zcl-id": "itsmepetrov/zcl-id#d144b89a2b471266fb01ede9cce0f64afdbef825",
