@@ -1,6 +1,6 @@
 {
   "name": "homebridge-zigbee",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "ZigBee Platform plugin for HomeBridge",
   "main": "index.js",
   "scripts": {
