@@ -11,7 +11,7 @@ ZigBee Platform plugin for [HomeBridge](https://github.com/nfarina/homebridge)
 
 This homebridge plugin exposes ZigBee lights, plugs, sensors, switches, end other devices connected to TI's [CC253X](http://www.ti.com/wireless-connectivity/simplelink-solutions/zigbee/products.html) wireless SoC to Apple's HomeKit.
 
-## [Documentaion](./docs/README.md)
+## [Documentation](./docs/README.md)
 
 * [Supported devices](docs/SupportedDevices.md)
 * [Plugin configuration](docs/PluginConfiguration.md)
