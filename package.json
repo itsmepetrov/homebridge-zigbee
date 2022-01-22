@@ -44,7 +44,7 @@
     "fakegato-history": "^0.5.2",
     "homebridge-lib": "^2.0.0",
     "lodash.get": "^4.4.2",
-    "nanoid": "^2.0.0",
+    "nanoid": "^3.1.31",
     "require-dir": "^1.0.0",
     "serialport": "^6.2.2",
     "zcl-id": "itsmepetrov/zcl-id#d144b89a2b471266fb01ede9cce0f64afdbef825",
